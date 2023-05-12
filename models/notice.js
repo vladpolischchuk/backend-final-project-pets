@@ -69,29 +69,32 @@ const noticesSchema = new Schema({
 
 noticesSchema.post("save", handleMongooseError);
 
-const addNoticeSchema = Joi.object({
-  category: Joi.string().valid("sell", "lost-found", "for-free").required(),
-  title: Joi.string().min(2).max(16).required(),
-  birthday: Joi.string().pattern(birthdayRegexp),
-  name: Joi.string().min(2).max(16).required(),
-  breed: Joi.string().min(2).max(16).required(),
-  sex: Joi.string().valid("male", "female").required(),
-  location: Joi.string()
-    .pattern(locationRegexp)
-    .when("category", {
-      is: Joi.valid("sell", "lost-found", "for-free"),
-      then: Joi.required(),
-      otherwise: Joi.optional(),
-    }),
-  price: Joi.number()
-    .min(0)
-    .when("category", {
-      is: "sell",
-      then: Joi.number().min(1).required(),
-      otherwise: Joi.optional(),
-    }),
-  comments: Joi.string(),
-});
+const addNoticeSchema = Joi.object(
+  {
+    category: Joi.string().valid("sell", "lost-found", "for-free").required(),
+    title: Joi.string().min(2).max(16).required(),
+    birthday: Joi.string().pattern(birthdayRegexp),
+    name: Joi.string().min(2).max(16).required(),
+    breed: Joi.string().min(2).max(16).required(),
+    sex: Joi.string().valid("male", "female").required(),
+    location: Joi.string()
+      .pattern(locationRegexp)
+      .when("category", {
+        is: Joi.valid("sell", "lost-found", "for-free"),
+        then: Joi.required(),
+        otherwise: Joi.optional(),
+      }),
+    price: Joi.number()
+      .min(0)
+      .when("category", {
+        is: "sell",
+        then: Joi.number().min(1).required(),
+        otherwise: Joi.optional(),
+      }),
+    comments: Joi.string(),
+  },
+  { versionKey: false, timestamps: true }
+);
 
 const getCategorySchema = Joi.object({
   category: Joi.string().valid("sell", "lost-found", "for-free"),
