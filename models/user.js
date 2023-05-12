@@ -6,11 +6,14 @@ const { handleMongooseError } = require("../utils/index");
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const phoneRegexp = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
+const passwordRegexp = /([a-z]+[A-Z]+[0-9]+|[a-z]+[0-9]+[A-Z]+|[A-Z]+[a-z]+[0-9]+|[A-Z]+[0-9]+[a-z]+|[0-9]+[a-z]+[A-Z]+|[0-9]+[A-Z]+[a-z]+)/;
 
 const userSchema = new Schema({
       password: {
             type: String,
             minlength: 6,
+            maxlength: 16,
+            match: passwordRegexp,
             required: [true, 'Password is required'],
       },
       email: {
@@ -21,11 +24,11 @@ const userSchema = new Schema({
       },
       name: {
             type: String,
-            required: [true, 'Set a name for yourself'],
       },
       birthday: {
             type: Date,
-            default: Date.now,
+            default: "12.05.2023",
+            required: true,
       },
       phone: {
             type: Number,
@@ -58,12 +61,12 @@ userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
       email: Joi.string().pattern(emailRegexp).required(),
-      password: Joi.string().min(6).required(),
+      password: Joi.string().min(6).max(16).pattern(passwordRegexp).required(),
 });
 
 const loginSchema = Joi.object({
       email: Joi.string().pattern(emailRegexp).required(),
-      password: Joi.string().min(6).required(),
+      password: Joi.string().min(6).max(16).pattern(passwordRegexp).required(),
 });
 
 const updateSubscription = Joi.object({
