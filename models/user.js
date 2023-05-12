@@ -5,6 +5,7 @@ const Joi = require("joi");
 const { handleMongooseError } = require("../utils/index");
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+const phoneRegexp = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
 
 const userSchema = new Schema({
       password: {
@@ -18,10 +19,22 @@ const userSchema = new Schema({
             match: emailRegexp,
             unique: true,
       },
-      subscription: {
+      name: {
             type: String,
-            enum: ["starter", "pro", "business"],
-            default: "starter"
+            required: [true, 'Set a name for yourself'],
+      },
+      birthday: {
+            type: Date,
+            default: Date.now,
+      },
+      phone: {
+            type: Number,
+            match: phoneRegexp,
+            unique: true,
+      },
+      city: {
+            type: String,
+            default: "Kiev",
       },
       token: {
             type: String,
