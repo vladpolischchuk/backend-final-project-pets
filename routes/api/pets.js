@@ -1,6 +1,6 @@
 const express = require("express");
 
-const ctrl = require("../../controllers/controllers");
+const ctrl = require("../../controllers/pets-controllers");
 
 const { validateBody } = require("../../utils/index");
 
@@ -9,7 +9,7 @@ const { authenticate } = require("../../middlewares/index");
 const {
   addSchema,
   updateFavoriteSchema
-} = require("../../models/contact");
+} = require("../../models/pets");
 
 const router = express.Router();
 

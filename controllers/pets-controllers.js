@@ -1,4 +1,4 @@
-const { Contact } = require("../models/contact");
+const { Pets } = require("../models/pets");
 
 const {
       HttpError,
@@ -10,7 +10,7 @@ const getAll = async (req, res, next) => {
       const { page = 1, limit = 10 } = req.query;
       const skip = (page - 1) * limit;
 
-      const result = await Contact.find({ owner }, "-createdAt -updateAt", { skip, limit });
+      const result = await Pets.find({ owner }, "-createdAt -updateAt", { skip, limit });
 
       res.status(200).json({
             data: result,
@@ -19,9 +19,9 @@ const getAll = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
       const { id } = req.params;
-      const result = await Contact.findById(id);
+      const result = await Pets.findById(id);
       if (!result) {
-            throw HttpError(404, `Contact with ${id} not found`);
+            throw HttpError(404, `Pets with ${id} not found`);
       };
 
       res.status(200).json({
@@ -31,7 +31,7 @@ const getById = async (req, res, next) => {
 
 const getAdd = async (req, res, next) => {
       const { _id: owner } = req.user;
-      const result = await Contact.create({
+      const result = await Pets.create({
             ...req.body,
             owner,
       });
@@ -41,35 +41,35 @@ const getAdd = async (req, res, next) => {
 
 const getRemove = async (req, res, next) => {
       const { id } = req.params;
-      const result = await Contact.findByIdAndRemove(id);
+      const result = await Pets.findByIdAndRemove(id);
 
       if (!result) {
-            throw HttpError(404, `Contact with ${id} not found`);
+            throw HttpError(404, `Pets with ${id} not found`);
       };
 
-      res.status(200).json({ message: "Contact deleted", data: result });
+      res.status(200).json({ message: "Pets deleted", data: result });
 };
 
 const getUpdate = async (req, res, next) => {
       const { id } = req.params;
-      const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+      const result = await Pets.findByIdAndUpdate(id, req.body, { new: true });
 
       if (!result) {
-            throw HttpError(404, `Contact with ${id} not found`);
+            throw HttpError(404, `Pets with ${id} not found`);
       };
 
-      res.status(200).json({ message: "Contact updated", data: result });
+      res.status(200).json({ message: "Pets updated", data: result });
 };
 
 const getFavorite = async (req, res, next) => {
       const { id } = req.params;
-      const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+      const result = await Pets.findByIdAndUpdate(id, req.body, { new: true });
 
       if (!result) {
-            throw HttpError(404, `Contact with ${id} not found`);
+            throw HttpError(404, `Pets with ${id} not found`);
       };
 
-      res.status(200).json({ message: "Contact updated", data: result });
+      res.status(200).json({ message: "Pets updated", data: result });
 };
 
 module.exports = {

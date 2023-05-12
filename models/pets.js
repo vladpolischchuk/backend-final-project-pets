@@ -4,7 +4,7 @@ const Joi = require("joi");
 
 const { handleMongooseError } = require("../utils/index");
 
-const contactcSchema = new Schema({
+const petsSchema = new Schema({
       name: {
             type: String,
             required: [true, 'Set name for contact'],
@@ -28,7 +28,7 @@ const contactcSchema = new Schema({
       },
 }, { versionKey: false, timestamps: true });
 
-contactcSchema.post("save", handleMongooseError);
+petsSchema.post("save", handleMongooseError);
 
 const addSchema = Joi.object({
       name: Joi.string().min(2).required(),
@@ -41,10 +41,10 @@ const updateFavoriteSchema = Joi.object({
       favorite: Joi.boolean().required(),
 });
 
-const Contact = model("contacts", contactcSchema);
+const Pets = model("contacts", petsSchema);
 
 module.exports = {
-      Contact,
+      Pets,
       addSchema,
       updateFavoriteSchema,
 };
