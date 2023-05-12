@@ -55,6 +55,10 @@ const petJoiSchema = joi.object({
     "any.required": `"comments" is required`,
     "string.empty":`"comments" field can't be empty!`
   }),
+  owner: joi.string().required().messages({
+    "any.required": `"owner" is required`,
+    "string.empty":`"owner" field can't be empty!`
+  }),
 })
 
 module.exports = {
