@@ -48,23 +48,23 @@ const noticesSchema = new Schema({
   comments: {
     type: String,
   },
-  image: {
-    type: String,
-    required: true,
-  },
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "user",
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-  },
+  // image: {
+  //   type: String,
+  //   required: true,
+  // },
+  // owner: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: "user",
+  //   required: true,
+  // },
+  // email: {
+  //   type: String,
+  //   required: true,
+  // },
+  // phone: {
+  //   type: String,
+  //   required: true,
+  // },
 });
 
 noticesSchema.post("save", handleMongooseError);
