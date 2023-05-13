@@ -4,26 +4,16 @@ const ctrl = require("../../controllers/pets-controllers");
 
 const { validateBody } = require("../../utils/index");
 
-const { authenticate } = require("../../middlewares/index");
+const { authenticate, cloudinary } = require("../../middlewares/index"); 
 
-const {
-  addSchema,
-  updateFavoriteSchema
-} = require("../../models/pets");
+const { petJoiSchema } = require("../../models/pets");
 
 const router = express.Router();
 
-router.get("/", authenticate, ctrl.getAll);
+router.post("/create", authenticate, validateBody(petJoiSchema), cloudinary.single('image'), ctrl.addPet);
 
-router.get("/:id", authenticate, ctrl.getById);
+router.delete("/:petId", authenticate, validateBody(petJoiSchema), ctrl.removePet);
 
-router.post("/", authenticate, validateBody(addSchema), ctrl.getAdd);
-
-router.delete("/:contactId", authenticate, ctrl.getRemove);
-
-router.put("/:contactId", authenticate, validateBody(addSchema), ctrl.getUpdate);
-
-router.patch("/:contactId/favorite", authenticate, validateBody(updateFavoriteSchema), ctrl.getFavorite);
-
+router.get("/all", authenticate, validateBody(petJoiSchema), ctrl.getAllPets);
 
 module.exports = router;

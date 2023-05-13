@@ -128,11 +128,17 @@ const login = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-      const { subscription, email } = req.user;
+      const { name, email, city, phone, avatarURL, birthday } = req.user;
 
       res.status(200).json({
-            email,
-            subscription,
+            user: {
+                  name,
+                  email,
+                  city,
+                  phone,
+                  avatarURL,
+                  birthday
+            },
       });
 };
 
