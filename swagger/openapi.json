@@ -169,6 +169,9 @@
           },
           "city": {
             "type": "string"
+          },
+          "phone": {
+            "type": "string"
           }
         },
         "example": {
@@ -177,7 +180,9 @@
           "avatarUrl": "//www.gravatar.com/avatar/6325b992520ae525b4233d1e90cd21ae",
           "name": "Example",
           "birthday": "00.00.0000",
-          "city": "Kharkiv"
+          "city": "Kharkiv",
+          "phone": "00-00-00-00"
+          
         }
       },
       "Auth": {

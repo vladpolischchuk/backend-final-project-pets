@@ -3,7 +3,7 @@ const Joi = require("joi");
 
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const phoneRegexp = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
+// const phoneRegexp = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
 
 const userSchema = new Schema({
   password: {
@@ -22,14 +22,12 @@ name: {
     default: "",
 },
 birthday: {
-    type: Date,
+    type: String,
     default: "",
 },
 phone: {
     type: String,
-    unique: true,
-    match: phoneRegexp,
-    default: "",
+    default: "00-00-00",
 },
 city: {
     type: String,
@@ -41,7 +39,6 @@ token: {
 },
 avatarURL: {
     type: String,
-    required: true,
 },
 }, {versionKey: false, timestamps: true});
 
@@ -59,10 +56,10 @@ const registerShema = Joi.object({
 const userInfoShema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   name: Joi.string(),
-  birthday: Joi.date(),
+  birthday: Joi.string(),
   avatarURL: Joi.string(),
   city: Joi.string().empty(false),
-  phone: Joi.string().pattern(phoneRegexp)
+  phone: Joi.string()
 });
 
 const User = model("user", userSchema);
