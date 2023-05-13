@@ -5,6 +5,9 @@ const multer = require('multer');
 
 const authRouter = require("./routes/api/auth");
 const petsRouter = require("./routes/api/pets");
+const noticesRouter = require("./routes/api/notices");
+const friendsRouter = require("./routes/api/friends");
+const newsRouter = require("./routes/api/news");
 
 const app = express();
 const swaggerUi = require('swagger-ui-express');
@@ -21,6 +24,9 @@ app.use(express.static("public"));
 
 app.use("/api/auth", authRouter);
 app.use("/api/pets", petsRouter);
+app.use("/api/notices", noticesRouter);
+app.use("/api/friends", friendsRouter);
+app.use("/api/news", newsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
