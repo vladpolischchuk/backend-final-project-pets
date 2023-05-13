@@ -8,8 +8,14 @@ const { schemas } = require("../../models/notice");
 
 const router = express.Router();
 
+router.get("/", ctrl.getAllNotices);
+
 router.post("/", validateBody(schemas.addNoticeSchema), ctrl.addNotices);
 
-router.get("/", ctrl.getAllNotices);
+router.get(
+  "/search",
+  validateBody(schemas.getNoticesByTitleSchema),
+  ctrl.getNoticesByTitle
+);
 
 module.exports = router;

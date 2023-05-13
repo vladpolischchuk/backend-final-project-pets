@@ -100,9 +100,15 @@ const getCategorySchema = Joi.object({
   category: Joi.string().valid("sell", "lost-found", "for-free"),
 });
 
+const getNoticesByTitleSchema = Joi.object({
+  title: Joi.string().min(2).max(16).required(),
+  category: Joi.string().valid("sell", "lost-found", "for-free"),
+});
+
 const schemas = {
   addNoticeSchema,
   getCategorySchema,
+  getNoticesByTitleSchema,
 };
 
 const Notices = model("notices", noticesSchema);
