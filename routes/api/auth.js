@@ -1,29 +1,21 @@
 const express = require("express");
 
-const { validateBody } = require("../../utils/index");
+const router = express.Router();
 
 const { authenticate, upload } = require("../../middlewares/index");
 
-const { schemas } = require("../../models/user");
+const {register, login, getCurrent, logout, updateAvatar, updateUser} = require("../../controllers/auth-controllers");
 
-const ctrl = require("../../controllers/auth-controllers");
+router.post('/register', register);
 
-const router = express.Router();
+router.post("/login", login);
 
-router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
+router.get("/current", authenticate, getCurrent);
 
-router.get("/verify/:verificationToken", ctrl.verify);
+router.post("/logout", authenticate, logout);
 
-router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerifyEmail);
+router.patch("/avatars", authenticate, upload.single("avatar"), updateAvatar)
 
-router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
-
-router.get("/current", authenticate, ctrl.getCurrent);
-
-router.post("/logout", authenticate, ctrl.logout);
-
-router.patch("/users", authenticate, validateBody(schemas.updateSubscription), ctrl.updateSubscription)
-
-router.patch("/avatars", authenticate, upload.single("avatar"), ctrl.updateAvatar);
+router.put("/:id", authenticate, updateUser)
 
 module.exports = router;

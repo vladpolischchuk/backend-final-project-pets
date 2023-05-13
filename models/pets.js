@@ -43,7 +43,7 @@ const petJoiSchema = joi.object({
     "any.required": `"breed" is required`,
     "string.empty":`"breed" field can't be empty!`
   }),
-  birthDate: joi.date().format(['DD.MM.YYYY']).utc().required().messages({
+  birthDate: joi.date().required().messages({
     "any.required": `"birthDate" is required`,
     "string.empty":`"birthDate" field can't be empty!`
   }),
