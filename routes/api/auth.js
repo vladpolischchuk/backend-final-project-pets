@@ -1,29 +1,25 @@
 const express = require("express");
 
+const router = express.Router();
+
 const { validateBody } = require("../../utils/index");
 
 const { authenticate, upload } = require("../../middlewares/index");
 
-const { schemas } = require("../../models/user");
+const {  registerShema, userInfoShema } = require('../../models/user')
 
-const ctrl = require("../../controllers/auth-controllers");
+const {register, login, getCurrent, logout, updateAvatar, updateUser} = require("../../controllers/auth-controllers");
 
-const router = express.Router();
+router.post('/register', validateBody(registerShema), register);
 
-router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
+router.post("/login", validateBody(registerShema), login);
 
-router.get("/verify/:verificationToken", ctrl.verify);
+router.get("/current", authenticate, getCurrent);
 
-router.post("/verify", validateBody(schemas.emailSchema), ctrl.resendVerifyEmail);
+router.post("/logout", authenticate, validateBody(registerShema), logout);
 
-router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
+router.put("/user/:id", authenticate, validateBody(userInfoShema), updateUser)
 
-router.get("/current", authenticate, ctrl.getCurrent);
-
-router.post("/logout", authenticate, ctrl.logout);
-
-router.patch("/users", authenticate, validateBody(schemas.updateSubscription), ctrl.updateSubscription)
-
-router.patch("/avatars", authenticate, upload.single("avatar"), ctrl.updateAvatar);
+router.put("/avatar/:id", authenticate, upload.single("avatarURL"), updateAvatar);
 
 module.exports = router;

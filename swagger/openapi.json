@@ -1,0 +1,209 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Our pets",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/api/"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Create a new user",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "registerUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Succes created"
+          },
+          "400": {
+            "description": "User creation error"
+          },
+          "409": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "loginUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Succes created"
+          },
+          "400": {
+            "description": "User creation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Log out user",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "logOutUser",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "6325b992520ae525b4233d1e90cd21a"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Succes log out"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/auth/current": {
+      "get": {
+        "summary": "Get information about the current user",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Get information about the current user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "6325b992520ae525b4233d1e90cd21a"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Information found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": [
+          "email",
+          "password",
+          "avatarUrl",
+          "name",
+          "birthday",
+          "city",
+          "verificationToken",
+          "verify"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "2023-05-01T00:00:00.000Z"
+          },
+          "city": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "email": "example@example.com",
+          "password": "Example12345",
+          "avatarUrl": "//www.gravatar.com/avatar/6325b992520ae525b4233d1e90cd21ae",
+          "name": "Example",
+          "birthday": "00.00.0000",
+          "city": "Kharkiv",
+          "phone": "00-00-00-00"
+          
+        }
+      },
+      "Auth": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "email": "example@example.com",
+          "password": "Example12345"
+        }
+      }
+    }
+  }
+}
