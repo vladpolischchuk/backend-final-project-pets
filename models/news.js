@@ -1,5 +1,7 @@
 const { Schema, model } = require("mongoose");
 
+const Joi = require("joi");
+
 const { handleMongooseError } = require("../utils");
 
 const newsSchema = new Schema(
@@ -28,6 +30,17 @@ const newsSchema = new Schema(
 
 newsSchema.post("save", handleMongooseError);
 
+const getNewsByTitleSchema = Joi.object({
+  title: Joi.string().required(),
+});
+
+const schemas = {
+  getNewsByTitleSchema,
+};
+
 const News = model("news", newsSchema);
 
-module.exports = News;
+module.exports = {
+  News,
+  schemas,
+};
