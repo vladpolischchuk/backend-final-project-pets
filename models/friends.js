@@ -2,41 +2,35 @@ const { Schema, model } = require("mongoose");
 
 const { handleMongooseError } = require("../utils");
 
-const friendsSchema = new Schema(
-  {
-    title: {
-      type: String,
-    },
-    url: {
-      type: String,
-    },
-    addressUrl: {
-      type: String,
-    },
-    imageUrl: {
-      type: String,
-    },
-    address: {
-      type: String,
-    },
-    workDays: {
-      type: Array,
-    },
-    phone: {
-      type: String,
-    },
-    email: {
-      type: String,
-    },
+const friendsSchema = new Schema({
+  title: {
+    type: String,
   },
-  {
-    versionKey: false,
-    timestamps: false,
-  }
-);
+  url: {
+    type: String,
+  },
+  addressUrl: {
+    type: String,
+  },
+  imageUrl: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
+  workDays: {
+    type: [Object],
+  },
+  phone: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+});
 
 friendsSchema.post("save", handleMongooseError);
 
 const Friends = model("friends", friendsSchema);
 
-module.exports = Friends;
+module.exports = { Friends };
