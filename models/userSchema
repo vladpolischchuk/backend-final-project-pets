@@ -1,11 +1,9 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 
-
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-// const phoneRegexp = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
 
-const userSchema = new Schema({
+const schema = new Schema({
   password: {
     type: String,
     minlength: 6,
@@ -25,28 +23,26 @@ birthday: {
     type: String,
     default: "",
 },
-phone: {
-    type: String,
-    default: "00-00-00",
-},
 city: {
     type: String,
     default: "",
 },
 token: {
-    type: String,
-    default: "",
+  type: String,
+  default: "",
 },
 avatarURL: {
-    type: String,
+  type: String,
 },
 }, {versionKey: false, timestamps: true});
 
-userSchema.post("save", (error, data, next) => {
+schema.post("save", (error, data, next) => {
   const {name, code} = error;
-  error.status = (name === "MongoServerError" && code === 11000 ? 409 : 400)
-  next();
-});
+
+    error.status = (name === "MongoServerError" && code === 11000 ? 409 : 400)
+    next();
+}) 
+
 
 const registerShema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
@@ -59,13 +55,12 @@ const userInfoShema = Joi.object({
   birthday: Joi.string(),
   avatarURL: Joi.string(),
   city: Joi.string().empty(false),
-  phone: Joi.string()
 });
 
-const User = model("user", userSchema);
+const Users = model("user", schema);
 
 module.exports = {
-  User,
+  Users,
   registerShema,
   userInfoShema,
 };

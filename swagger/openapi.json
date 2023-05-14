@@ -141,20 +141,10 @@
       "User": {
         "type": "object",
         "required": [
-          "email",
-          "password",
-          "avatarUrl",
-          "name",
-          "birthday",
-          "city",
-          "verificationToken",
-          "verify"
+          "email"
         ],
         "properties": {
           "email": {
-            "type": "string"
-          },
-          "password": {
             "type": "string"
           },
           "avatarUrl": {
@@ -169,19 +159,14 @@
           },
           "city": {
             "type": "string"
-          },
-          "phone": {
-            "type": "string"
           }
         },
         "example": {
           "email": "example@example.com",
-          "password": "Example12345",
           "avatarUrl": "//www.gravatar.com/avatar/6325b992520ae525b4233d1e90cd21ae",
           "name": "Example",
           "birthday": "00.00.0000",
-          "city": "Kharkiv",
-          "phone": "00-00-00-00"
+          "city": "Kharkiv"
           
         }
       },
