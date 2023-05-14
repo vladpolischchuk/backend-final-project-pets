@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 
-const { User } = require("../models/user");
+const { Users } = require("../models/userSchema");
 
 const { HttpError, ctrlWrapper } = require("../utils/index");
 
@@ -10,15 +10,15 @@ const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
     const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
+console.log(req.user)
+    const user = await Users.findOne({ email });
     if (user) {
       throw HttpError(409, "Email in use");
     }
     const avatarURL = gravatar.url(email);
     console.log(req.body)
     const hashPassword = await bcrypt.hash(password, 10);
-    const result = await User.create({
+    const result = await Users.create({
       ...req.body,
       password: hashPassword,
       avatarURL,
@@ -33,7 +33,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
 
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await Users.findOne({ email });
     if (!user) {
       throw HttpError(401, "Email or password is wrong");
     }
@@ -80,14 +80,14 @@ const logout = async (req, res) => {
 const updateUser = async(req, res) => {
     const {id} = req.user;
     console.log(req.body)
-    const result = await User.findByIdAndUpdate(id, req.body)
+    const result = await Users.findByIdAndUpdate(id, req.body)
     res.json(result);
 }
 
 const updateAvatar = async (req, res) => {
   const {id} = req.user;
 
- const newAvatar = await User.findByIdAndUpdate(id, {avatarURL: req.file.path});
+ const newAvatar = await Users.findByIdAndUpdate(id, {avatarURL: req.file.path});
 
   res.json(newAvatar);
 
