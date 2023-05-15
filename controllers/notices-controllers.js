@@ -31,8 +31,36 @@ const getNoticesByTitle = async (req, res) => {
   res.json(result);
 };
 
+const getNoticesByCategory = async (req, res) => {
+  const { category } = req.body;
+
+  const result = await Notices.find({
+    category,
+  });
+
+  if (!result) {
+    throw HttpError(404, `Notice with ${category} not found`);
+  }
+
+  res.json(result);
+};
+
+const getOneNotice = async (req, res) => {
+  const { id } = req.params;
+
+  const result = await Notices.findById(id);
+
+  if (!result) {
+    throw HttpError(404, `Notice with ${id} not found`);
+  }
+
+  res.json(result);
+};
+
 module.exports = {
   getAllNotices: ctrlWrapper(getAllNotices),
   addNotices: ctrlWrapper(addNotices),
   getNoticesByTitle: ctrlWrapper(getNoticesByTitle),
+  getNoticesByCategory: ctrlWrapper(getNoticesByCategory),
+  getOneNotice: ctrlWrapper(getOneNotice),
 };
