@@ -313,12 +313,12 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Pet"
+              "$ref": "#/components/schemas/Allpets"
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Information found"
           },
           "404": {
@@ -340,20 +340,43 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": ["image"],
+                "required": ["image", "name", "breed", "birthDate", "comments"],
                 "type": "object",
                 "properties": {
                   "image": {
                     "type": "file",
                     "format": "binary"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "description": "birthDate"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "name"
+                  },
+                  "breed": {
+                    "type": "string",
+                    "description": "Breed"
+                  },
+                  "comments": {
+                    "type": "string",
+                    "description": "comments"
                   }
+                },
+                "example": {
+                  "name": "Dog",
+                  "birthDate": "13.05.2020",
+                  "breed": "scottish",
+                  "comments": "Test"
                 }
               }
             },
+
             "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Pet"
-                }
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
             }
           }
         },
@@ -494,7 +517,7 @@
         }
       }
     },
-    "/notices/{categories}": {
+    "/notices/categories": {
       "get": {
         "summary": "Get notices by category",
         "tags": ["Notices"],
@@ -710,7 +733,7 @@
         "bearerFormat": "JWT"
       }
     },
-    "schemas": {     
+    "schemas": {
       "User": {
         "type": "object",
         "required": ["email"],
@@ -790,9 +813,8 @@
           "phone": "+380993929499"
         }
       },
-      "Pet": {
+      "Allpets": {
         "type": "object",
-        "required": ["name", "breed", "birthDate", "photo", "comments"],
         "properties": {
           "birthDate": {
             "type": "string",
@@ -823,7 +845,6 @@
           "name": "Dog",
           "birthDate": "13.05.2020",
           "breed": "scottish",
-          "photo": "Url",
           "owner": "1000",
           "comments": "Test"
         }
