@@ -10,7 +10,7 @@ const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
     const { email, password } = req.body;
-console.log(req.user)
+
     const user = await Users.findOne({ email });
     if (user) {
       throw HttpError(409, "Email in use");
@@ -50,7 +50,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
 
-    await User.findByIdAndUpdate(user._id, { token });
+    await Users.findByIdAndUpdate(user._id, { token });
 
     res.json({
       token,
@@ -70,7 +70,7 @@ const logout = async (req, res) => {
 
     const { _id } = req.user;
 
-    await User.findByIdAndUpdate(_id, { token: "" });
+    await Users.findByIdAndUpdate(_id, { token: "" });
 
     res.json({
       message: "Logout success",

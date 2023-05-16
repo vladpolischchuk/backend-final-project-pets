@@ -19,6 +19,10 @@ name: {
     type: String,
     default: "",
 },
+phone: {
+   type: String,
+   default: ""
+},
 birthday: {
     type: String,
     default: "",
@@ -55,9 +59,10 @@ const userInfoShema = Joi.object({
   birthday: Joi.string(),
   avatarURL: Joi.string(),
   city: Joi.string().empty(false),
+  phone: Joi.string()
 });
 
-const Users = model("user", schema);
+const Users = model("users", schema);
 
 module.exports = {
   Users,
