@@ -14,6 +14,6 @@ router.post("/create", authenticate, validateBody(petJoiSchema), cloudinary.sing
 
 router.delete("/:petId", authenticate, validateBody(petJoiSchema), ctrl.removePet);
 
-router.get("/all", authenticate, validateBody(petJoiSchema), ctrl.getAllPets);
+router.get("/all", authenticate,  ctrl.getAllPets);
 
 module.exports = router;
