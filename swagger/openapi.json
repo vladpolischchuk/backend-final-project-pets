@@ -8,6 +8,9 @@
   "produces": ["aplication/json", "multipart/form-data"],
   "servers": [
     {
+      "url": "https://backend-project-pets.onrender.com/api/"
+    },
+    {
       "url": "http://localhost:3001/api/"
     }
   ],
