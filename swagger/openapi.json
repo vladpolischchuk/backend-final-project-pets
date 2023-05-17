@@ -371,12 +371,6 @@
                   "comments": "Test"
                 }
               }
-            },
-
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Pet"
-              }
             }
           }
         },
