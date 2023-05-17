@@ -8,22 +8,20 @@ const { schemas } = require("../../models/notice");
 
 const router = express.Router();
 
-router.get("/", ctrl.getAllNotices);
-
 router.post("/", validateBody(schemas.addNoticeSchema), ctrl.addNotices);
 
-router.get(
-  "/categories",
-  validateBody(schemas.getCategorySchema),
-  ctrl.getNoticesByCategory
-);
+router.get("/all", ctrl.getAllNotices);
 
-router.get(
-  "/search",
-  validateBody(schemas.getNoticesByTitleSchema),
-  ctrl.getNoticesByTitle
-);
+router.get("/search", ctrl.getNoticesByTitle);
 
-router.get("/:id", ctrl.getOneNotice);
+router.get("/:category", ctrl.getNoticesByCategory);
+
+// router.get(
+//   "/:categoriesName",
+//   validateBody(schemas.getCategorySchema),
+//   ctrl.getNoticesByCategory
+// );
+
+router.get("/id/:id", ctrl.getOneNotice);
 
 module.exports = router;

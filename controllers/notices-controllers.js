@@ -15,14 +15,23 @@ const addNotices = async (req, res) => {
 };
 
 const getNoticesByTitle = async (req, res) => {
-  const { title, category } = req.body;
+  const { page, limit, title } = req.query;
+
+  const skip = (page - 1) * limit;
 
   if (!title) {
     throw HttpError(404, "Title not selected");
   }
 
   const optimizerTitle = new RegExp(title, "i");
-  const result = await Notices.find({ title: optimizerTitle, category });
+  const result = await Notices.find(
+    { title: optimizerTitle },
+    "-createdAt -updatedAt",
+    {
+      skip,
+      limit,
+    }
+  );
 
   if (result.length === 0) {
     throw HttpError(404, "Title not found");
@@ -32,10 +41,14 @@ const getNoticesByTitle = async (req, res) => {
 };
 
 const getNoticesByCategory = async (req, res) => {
-  const { category } = req.body;
+  const { category } = req.params;
+  const { page, limit } = req.query;
 
-  const result = await Notices.find({
-    category,
+  const skip = (page - 1) * limit;
+
+  const result = await Notices.find({ category }, "-createdAt -updatedAt", {
+    skip,
+    limit,
   });
 
   if (!result) {
