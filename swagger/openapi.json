@@ -1,21 +1,41 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Our pets",
+    "title": "Your_pets",
     "version": "0.0.1"
   },
+  "consumes": ["aplication/json", "multipart/form-data"],
+  "produces": ["aplication/json", "multipart/form-data"],
   "servers": [
     {
       "url": "http://localhost:3001/api/"
     }
   ],
+
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Notices"
+    },
+    {
+      "name": "Pets"
+    },
+    {
+      "name": "Friends"
+    },
+    {
+      "name": "News"
+    }
+  ],
+
   "paths": {
     "/auth/register": {
       "post": {
         "summary": "Create a new user",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "operationId": "registerUser",
         "requestBody": {
           "required": true,
@@ -34,6 +54,9 @@
           "400": {
             "description": "User creation error"
           },
+          "404": {
+            "description": "Not found"
+          },
           "409": {
             "description": "Server error"
           }
@@ -43,9 +66,7 @@
     "/auth/login": {
       "post": {
         "summary": "Login user",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "operationId": "loginUser",
         "requestBody": {
           "required": true,
@@ -58,7 +79,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Succes created"
           },
           "400": {
@@ -73,9 +94,7 @@
     "/auth/logout": {
       "post": {
         "summary": "Log out user",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "operationId": "logOutUser",
         "parameters": [
           {
@@ -89,9 +108,23 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth"
+              }
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }],
         "responses": {
           "201": {
             "description": "Succes log out"
+          },
+          "404": {
+            "description": "Not found"
           },
           "401": {
             "description": "Unauthorized"
@@ -102,9 +135,7 @@
     "/auth/current": {
       "get": {
         "summary": "Get information about the current user",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "operationId": "Get information about the current user",
         "parameters": [
           {
@@ -114,51 +145,628 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example": "6325b992520ae525b4233d1e90cd21a"
+              "example": "Authorizations - The token issued to the current user."
             }
           }
         ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Information found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
+            "description": "Information found"
+          },
+          "404": {
+            "description": "Not found"
           },
           "401": {
             "description": "Unauthorized"
           }
         }
       }
+    },
+    "/auth/user/{id}": {
+      "put": {
+        "summary": "Changing user's information",
+        "tags": ["Auth"],
+        "operationId": "Changing user's information",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "User's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Changing_user"
+              }
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Information changed successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/auth/avatar/{id}": {
+      "put": {
+        "summary": "Changing user's avatar",
+        "tags": ["Auth"],
+        "operationId": "Changing user's avatar",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["avatarURL"],
+                "type": "object",
+                "properties": {
+                  "avatarURL": {
+                    "type": "file",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "User's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Information changed successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/pets/all": {
+      "get": {
+        "summary": "Get all pets",
+        "tags": ["Pets"],
+        "operationId": "Get all pets",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Allpets"
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Information found"
+          },
+          "404": {
+            "description": "Probably this user doesnt have any pet registered yet!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/pets/create": {
+      "post": {
+        "summary": "Post pet",
+        "tags": ["Pets"],
+        "operationId": "Post pet",
+        "requestBody": {
+          "required": "true",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["image", "name", "breed", "birthDate", "comments"],
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "file",
+                    "format": "binary"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "description": "birthDate"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "name"
+                  },
+                  "breed": {
+                    "type": "string",
+                    "description": "Breed"
+                  },
+                  "comments": {
+                    "type": "string",
+                    "description": "comments"
+                  }
+                },
+                "example": {
+                  "name": "Dog",
+                  "birthDate": "13.05.2020",
+                  "breed": "scottish",
+                  "comments": "Test"
+                }
+              }
+            },
+
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Pet"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Information found"
+          },
+          "404": {
+            "description": "Probably this user doesnt have any pet registered yet!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/pets/{petId}": {
+      "delete": {
+        "summary": "Delete pet",
+        "tags": ["Pets"],
+        "operationId": "Delete pet",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "Pet's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": []
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/notices/": {
+      "get": {
+        "summary": "Get all notices",
+        "tags": ["Notices"],
+        "operationId": "Get all notices",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add notices",
+        "tags": ["Notices"],
+        "operationId": "Add notices",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notices"
+              }
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notices/categories": {
+      "get": {
+        "summary": "Get notices by category",
+        "tags": ["Notices"],
+        "operationId": "Get notices by category",
+        "parameters": [
+          {
+            "name": "categories",
+            "description": "categories",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "lost-found"
+            }
+          }
+        ],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notices/{search}": {
+      "get": {
+        "summary": "Get notices by title",
+        "tags": ["Notices"],
+        "operationId": "Get notices by title",
+        "parameters": [
+          {
+            "name": "title",
+            "description": "title",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Search"
+            }
+          },
+          {
+            "name": "category",
+            "description": "category",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "example": "lost-found"
+            }
+          }
+        ],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notices/{id}": {
+      "get": {
+        "summary": "Get one notices by id",
+        "tags": ["Notices"],
+        "operationId": "Get one notices by id",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "64625b7bbd1b77c304194363"
+            }
+          }
+        ],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/friends/": {
+      "get": {
+        "summary": "Get all friends",
+        "tags": ["Friends"],
+        "operationId": "Get all friends",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Friends"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/news/": {
+      "get": {
+        "summary": "Get all news",
+        "tags": ["News"],
+        "operationId": "Get all news",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/News"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/news/{search}": {
+      "get": {
+        "summary": "Get all news",
+        "tags": ["News"],
+        "operationId": "Get all news",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/News"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "title",
+            "description": "title",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Search"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
-        "required": [
-          "email"
-        ],
+        "required": ["email"],
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
           },
           "avatarUrl": {
-            "type": "string"
+            "type": "string",
+            "description": "User's avatar"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "User's name"
           },
           "birthday": {
             "type": "string",
-            "format": "2023-05-01T00:00:00.000Z"
+            "format": "2023-05-01T00:00:00.000Z",
+            "description": "User's birthday"
           },
           "city": {
-            "type": "string"
+            "type": "string",
+            "description": "City"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone"
+          },
+          "id": {
+            "type": "string",
+            "description": "id"
           }
         },
         "example": {
@@ -166,27 +774,222 @@
           "avatarUrl": "//www.gravatar.com/avatar/6325b992520ae525b4233d1e90cd21ae",
           "name": "Example",
           "birthday": "00.00.0000",
-          "city": "Kharkiv"
-          
+          "city": "Kharkiv",
+          "phone": "+38000000000",
+          "id": "2323908423948392"
         }
       },
       "Auth": {
         "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "description": "Password"
           }
         },
         "example": {
           "email": "example@example.com",
           "password": "Example12345"
+        }
+      },
+      "Changing_user": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          }
+        },
+        "example": {
+          "email": "example@example.com",
+          "phone": "+380993929499"
+        }
+      },
+      "Allpets": {
+        "type": "object",
+        "properties": {
+          "birthDate": {
+            "type": "string",
+            "description": "birthDate"
+          },
+          "name": {
+            "type": "string",
+            "description": "name"
+          },
+          "breed": {
+            "type": "string",
+            "description": "Breed"
+          },
+          "photo": {
+            "type": "string",
+            "description": "photo"
+          },
+          "owner": {
+            "type": "object",
+            "description": "owner"
+          },
+          "comments": {
+            "type": "string",
+            "description": "comments"
+          }
+        },
+        "example": {
+          "name": "Dog",
+          "birthDate": "13.05.2020",
+          "breed": "scottish",
+          "owner": "1000",
+          "comments": "Test"
+        }
+      },
+      "Notices": {
+        "type": "object",
+        "required": [
+          "category",
+          "title",
+          "birthday",
+          "name",
+          "breed",
+          "sex",
+          "location"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["sell", "lost-found", "for-free"],
+            "description": "Category notices"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title"
+          },
+          "birthday": {
+            "type": "string",
+            "description": "birthday"
+          },
+          "name": {
+            "type": "string",
+            "description": "name"
+          },
+          "breed": {
+            "type": "string",
+            "description": "Breed"
+          },
+          "sex": {
+            "type": "string",
+            "description": "sex"
+          },
+          "location": {
+            "type": "string",
+            "description": "location"
+          },
+          "comments": {
+            "type": "string",
+            "description": "comments"
+          },
+          "price": {
+            "type": "number",
+            "description": "price"
+          }
+        },
+        "example": {
+          "title": "selling a cat",
+          "name": "Dog",
+          "birthday": "13.05.2020",
+          "breed": "scottish",
+          "location": "Kiev",
+          "sex": "male",
+          "category": "lost-found",
+          "price": "1000",
+          "comments": "Test"
+        }
+      },
+      "Friends": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title"
+          },
+          "url": {
+            "type": "string",
+            "description": "url"
+          },
+          "adressUrl": {
+            "type": "string",
+            "description": "adressUrl"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "imageUrl"
+          },
+          "adress": {
+            "type": "string",
+            "description": "adress"
+          },
+          "workDays": {
+            "type": "object",
+            "description": "workDays"
+          },
+          "phone": {
+            "type": "string",
+            "description": "phone"
+          },
+          "email": {
+            "type": "string",
+            "description": "email"
+          }
+        },
+        "example": {
+          "title": "Friends",
+          "url": "url",
+          "adressUrl": "url",
+          "imageUrl": "url",
+          "adress": "Kharkiv",
+          "workDays": {
+            "пн": "10:00-19:00"
+          },
+          "phone": "+380993929499",
+          "email": "example@example.com"
+        }
+      },
+      "News": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title"
+          },
+          "text": {
+            "type": "string",
+            "description": "Text"
+          },
+          "url": {
+            "type": "string",
+            "description": "url"
+          },
+          "imgUrl": {
+            "type": "string",
+            "description": "imgUrl"
+          },
+          "date": {
+            "type": "string",
+            "description": "date"
+          }
+        },
+        "example": {
+          "title": "Friends",
+          "text": "text",
+          "url": "url",
+          "imgUrl": "url",
+          "date": "20-03-2023"
         }
       }
     }
