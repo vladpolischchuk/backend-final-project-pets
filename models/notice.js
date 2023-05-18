@@ -52,19 +52,19 @@ const noticesSchema = new Schema({
   //   type: String,
   //   required: true,
   // },
-  // owner: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: "user",
-  //   required: true,
-  // },
-  // email: {
-  //   type: String,
-  //   required: true,
-  // },
-  // phone: {
-  //   type: String,
-  //   required: true,
-  // },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
 });
 
 noticesSchema.post("save", handleMongooseError);
@@ -92,6 +92,8 @@ const addNoticeSchema = Joi.object(
         otherwise: Joi.optional(),
       }),
     comments: Joi.string(),
+    phone: Joi.string().required(),
+    email: Joi.string().required(),
   },
   { versionKey: false, timestamps: true }
 );
