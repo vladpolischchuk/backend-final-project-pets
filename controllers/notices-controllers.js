@@ -9,11 +9,6 @@ const getAllNotices = async (req, res) => {
   res.json(result);
 };
 
-const addNotices = async (req, res) => {
-  const result = await Notices.create(req.body);
-  res.status(201).json(result);
-};
-
 const getNoticesByTitle = async (req, res) => {
   const { page, limit, title } = req.query;
 
@@ -75,10 +70,54 @@ const getOneNotice = async (req, res) => {
   res.json(result);
 };
 
+// Пользователь авторизован
+
+const addNotices = async (req, res) => {
+  const { _id: owner } = req.user;
+  const result = await Notices.create({ ...req.body, owner });
+  res.status(201).json(result);
+};
+
+const getNoticesByOwner = async (req, res) => {
+  const { _id: owner } = req.user;
+  const { page, limit } = req.query;
+
+  const skip = (page - 1) * limit;
+
+  const result = await Notices.find({ owner }, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  });
+
+  res.json(result);
+};
+
+const deleteNotice = async (req, res) => {
+  const { id } = req.params;
+  const { _id: owner } = req.user;
+
+  const noticeFound = await Notices.findOne({ owner, _id: id });
+  if (!noticeFound) {
+    throw HttpError(400, "This notice is not yours or already deleted");
+  }
+
+  const result = await Notices.findByIdAndDelete(id);
+
+  if (!result) {
+    throw HttpError(404, `Notice with ${id} not found`);
+  }
+
+  res.json({
+    message: "Notice deleted",
+  });
+};
+
 module.exports = {
   getAllNotices: ctrlWrapper(getAllNotices),
   addNotices: ctrlWrapper(addNotices),
   getNoticesByTitle: ctrlWrapper(getNoticesByTitle),
   getNoticesByCategory: ctrlWrapper(getNoticesByCategory),
   getOneNotice: ctrlWrapper(getOneNotice),
+  getNoticesByOwner: ctrlWrapper(getNoticesByOwner),
+  deleteNotice: ctrlWrapper(deleteNotice),
 };

@@ -845,7 +845,9 @@
           "name",
           "breed",
           "sex",
-          "location"
+          "location",
+          "phone",
+          "email"
         ],
         "properties": {
           "category": {
@@ -884,6 +886,14 @@
           "price": {
             "type": "number",
             "description": "price"
+          },
+          "phone": {
+            "type": "string",
+            "description": "phone"
+          },
+          "email": {
+            "type": "string",
+            "description": "email"
           }
         },
         "example": {
@@ -895,7 +905,9 @@
           "sex": "male",
           "category": "lost-found",
           "price": "1000",
-          "comments": "Test"
+          "comments": "Test",
+          "phone": "+38000000000",
+          "email": "test@mail.ua"
         }
       },
       "Friends": {
