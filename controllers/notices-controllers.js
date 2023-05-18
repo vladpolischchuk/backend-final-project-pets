@@ -47,7 +47,8 @@ const getNoticesByCategory = async (req, res) => {
   const skip = (page - 1) * limit;
 
   const result = await Notices.find(
-    { category, title },
+    title ? { category, title } : { category },
+
     "-createdAt -updatedAt",
     {
       skip,
