@@ -18,9 +18,9 @@ const addPet = async (req, res, next) => {
 };
 
 const removePet = async (req, res, next) => {
-  const { id } = req.params;
+  const { petId } = req.params;
   const { _id } = req.user;
-  const deleteItem = await Pet.findByIdAndRemove(id).where('owner').equals(_id);
+  const deleteItem = await Pet.findByIdAndRemove(petId).where('owner').equals(_id);
 
   if (!deleteItem) {
     throw HttpError(404, 'This pet is not in the list!');
