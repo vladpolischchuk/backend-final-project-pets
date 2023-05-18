@@ -10,14 +10,14 @@ const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
     const { email, password } = req.body;
-
     const user = await Users.findOne({ email });
     if (user) {
       throw HttpError(409, "Email in use");
     }
     const avatarURL = gravatar.url(email);
-    console.log(req.body)
+
     const hashPassword = await bcrypt.hash(password, 10);
+    let token;
     const result = await Users.create({
       ...req.body,
       password: hashPassword,
@@ -29,7 +29,7 @@ const register = async (req, res) => {
       id: user._id,
     };
 
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
+    token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
 
     await Users.findByIdAndUpdate(user._id, { token });
     }
@@ -38,7 +38,6 @@ const register = async (req, res) => {
     res.status(201).json({
       email: result.email,
       token
-
     });
 };
 
