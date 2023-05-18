@@ -1,4 +1,5 @@
 const { News } = require("../models/news");
+const { HttpError } = require("../utils/HttpError");
 
 const getNews = async (req, res, next) => {
   const { page, limit } = req.query;
@@ -18,9 +19,9 @@ const getNewsByTitle = async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  if (!title) {
+  /* if (!title) {
     throw HttpError(404, "Title not selected");
-  }
+  } */
 
   const optimizerTitle = new RegExp(title, "i");
   const result = await News.find(
