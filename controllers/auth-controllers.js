@@ -37,6 +37,7 @@ const register = async (req, res) => {
 
     res.status(201).json({
       email: result.email,
+      token
 
     });
 };
@@ -83,7 +84,7 @@ const logout = async (req, res) => {
 
     await Users.findByIdAndUpdate(_id, { token: "" });
 
-    res.json({
+    res.status(201).json({
       message: "Logout success",
     });
 };
