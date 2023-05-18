@@ -42,17 +42,21 @@ const getNoticesByTitle = async (req, res) => {
 
 const getNoticesByCategory = async (req, res) => {
   const { category } = req.params;
-  const { page, limit } = req.query;
+  const { page, limit, title } = req.query;
 
   const skip = (page - 1) * limit;
 
-  const result = await Notices.find({ category }, "-createdAt -updatedAt", {
-    skip,
-    limit,
-  });
+  const result = await Notices.find(
+    { category, title },
+    "-createdAt -updatedAt",
+    {
+      skip,
+      limit,
+    }
+  );
 
   if (!result) {
-    throw HttpError(404, `Notice with ${category} not found`);
+    throw HttpError(404, `Notice with ${category} or ${title} not found`);
   }
 
   res.json(result);
