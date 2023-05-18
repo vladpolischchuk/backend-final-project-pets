@@ -111,16 +111,6 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Auth"
-              }
-            }
-          }
-        },
         "security": [{ "Bearer": [] }],
         "responses": {
           "201": {
