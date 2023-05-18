@@ -23,9 +23,21 @@ const register = async (req, res) => {
       password: hashPassword,
       avatarURL,
     });
+    const loginUserafterRegister = async (req, res) =>{
+    const user = await Users.findOne({ email });
+    const payload = {
+      id: user._id,
+    };
+
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
+
+    await Users.findByIdAndUpdate(user._id, { token });
+    }
+    await loginUserafterRegister();
 
     res.status(201).json({
       email: result.email,
+      token
 
     });
 };
@@ -72,7 +84,7 @@ const logout = async (req, res) => {
 
     await Users.findByIdAndUpdate(_id, { token: "" });
 
-    res.json({
+    res.status(201).json({
       message: "Logout success",
     });
 };
