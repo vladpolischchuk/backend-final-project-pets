@@ -23,6 +23,10 @@ const getNewsByTitle = async (req, res) => {
     throw HttpError(404, "Title not selected");
   } */
 
+  const resultAll = await Notices.find(
+    title ? { category, title } : { category }
+  );
+
   const optimizerTitle = new RegExp(title, "i");
   const result = await News.find(
     { title: optimizerTitle },
@@ -37,7 +41,7 @@ const getNewsByTitle = async (req, res) => {
     throw HttpError(404, "Title not found");
   }
 
-  res.json(result);
+  res.json({ result, total: resultAll.length });
 };
 
 module.exports = {
