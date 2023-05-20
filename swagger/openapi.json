@@ -311,7 +311,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Information found"
           },
           "404": {
@@ -447,6 +447,180 @@
       }
     },
     "/notices/": {
+      "post": {
+        "summary": "Add notices",
+        "tags": ["Notices"],
+        "operationId": "Add notices",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Notices"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notices/user": {
+      "post": {
+        "summary": "Get notices by owner",
+        "tags": ["Notices"],
+        "operationId": "Get notices by owner",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "skip": {
+                "type":"number"
+              },
+              "limit": {
+                "type":"number"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notices/delete/{id}": {
+      "delete": {
+        "summary": "Delete notice",
+        "tags": ["Pets"],
+        "operationId": "Delete notice",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema":[]
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/notices/id/{id}": {
+      "get": {
+        "summary": "Get one notice",
+        "tags": ["Pets"],
+        "operationId": "Get one notice",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref":"#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/notices/all": {
       "get": {
         "summary": "Get all notices",
         "tags": ["Notices"],
@@ -469,50 +643,17 @@
             "description": "Server error"
           }
         }
-      },
-      "post": {
-        "summary": "Add notices",
-        "tags": ["Notices"],
-        "operationId": "Add notices",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Notices"
-              }
-            }
-          }
-        },
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Notices"
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
       }
     },
-    "/notices/categories": {
+    "/notices/{category}": {
       "get": {
         "summary": "Get notices by category",
         "tags": ["Notices"],
         "operationId": "Get notices by category",
         "parameters": [
           {
-            "name": "categories",
-            "description": "categories",
+            "name": "category",
+            "description": "category",
             "in": "header",
             "required": true,
             "schema": {
@@ -541,69 +682,11 @@
         }
       }
     },
-    "/notices/{search}": {
+    "/notices/search": {
       "get": {
         "summary": "Get notices by title",
         "tags": ["Notices"],
         "operationId": "Get notices by title",
-        "parameters": [
-          {
-            "name": "title",
-            "description": "title",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Search"
-            }
-          },
-          {
-            "name": "category",
-            "description": "category",
-            "in": "header",
-            "schema": {
-              "type": "string",
-              "example": "lost-found"
-            }
-          }
-        ],
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Notices"
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/notices/{id}": {
-      "get": {
-        "summary": "Get one notices by id",
-        "tags": ["Notices"],
-        "operationId": "Get one notices by id",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "id",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "64625b7bbd1b77c304194363"
-            }
-          }
-        ],
         "content": {
           "application/json": {
             "schema": {
@@ -661,43 +744,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Successfully"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/news/{search}": {
-      "get": {
-        "summary": "Get all news",
-        "tags": ["News"],
-        "operationId": "Get all news",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/News"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "title",
-            "description": "title",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Search"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully"
@@ -981,6 +1027,14 @@
           "date": {
             "type": "string",
             "description": "date"
+          },
+          "skip": {
+            "type": "number",
+            "description": "skip"
+          },
+          "limit": {
+            "type": "number",
+            "description": "limit"
           }
         },
         "example": {
@@ -988,7 +1042,9 @@
           "text": "text",
           "url": "url",
           "imgUrl": "url",
-          "date": "20-03-2023"
+          "date": "20-03-2023",
+          "skip": 1,
+          "limit": 10
         }
       }
     }
