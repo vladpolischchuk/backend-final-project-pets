@@ -594,7 +594,7 @@
       }
     },
     "/notices/user": {
-      "post": {
+      "get": {
         "summary": "Get notices by owner",
         "tags": ["Notices"],
         "operationId": "Get notices by owner",
