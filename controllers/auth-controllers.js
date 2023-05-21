@@ -89,26 +89,25 @@ const logout = async (req, res) => {
 };
 
 const updateUser = async(req, res) => {
-  const {email, name, avatarURL, city, birthday, phone, id } = req.user;
+  const {id } = req.user;
  
 await Users.findByIdAndUpdate(id, req.body)
 let infoUser;
-const getCurrentInfo = async (res, req) => {
-  infoUser = { email, name, avatarURL, city, birthday, phone, id }
+  const getCurrentInfo = async (res, req) => {
+    infoUser = await Users.findById(id);
 }
 await getCurrentInfo()
-
   res.json(infoUser);
 }
 
 const updateAvatar = async (req, res) => {
-const {email, name, avatarURL, city, birthday, phone, id} = req.user;
+const {id} = req.user;
 
 await Users.findByIdAndUpdate(id, {avatarURL: req.file.path});
 
 let newAvatar;
 const getCurrentInfo = async (res, req) => {
- newAvatar = { email, name, avatarURL, city, birthday, phone, id }
+  newAvatar = await Users.findById(id);
 }
 await getCurrentInfo()
 
