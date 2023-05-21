@@ -48,10 +48,10 @@ const noticesSchema = new Schema({
   comments: {
     type: String,
   },
-  // image: {
-  //   type: String,
-  //   required: true,
-  // },
+  photo: {
+    type: String,
+    required: true,
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -94,6 +94,7 @@ const addNoticeSchema = Joi.object(
     comments: Joi.string(),
     phone: Joi.string().required(),
     email: Joi.string().required(),
+    photo: Joi.string().required(),
   },
   { versionKey: false, timestamps: true }
 );
