@@ -515,6 +515,7 @@
         "content": {
           "application/json": {
             "schema": {
+              "$ref": "#/components/schemas/Notices",
               "skip": {
                 "type":"number"
               },
@@ -540,7 +541,7 @@
     "/notices/delete/{id}": {
       "delete": {
         "summary": "Delete notice",
-        "tags": ["Pets"],
+        "tags": ["Notices"],
         "operationId": "Delete notice",
         "parameters": [
           {
@@ -586,7 +587,7 @@
     "/notices/id/{id}": {
       "get": {
         "summary": "Get one notice",
-        "tags": ["Pets"],
+        "tags": ["Notices"],
         "operationId": "Get one notice",
         "parameters": [
           {
