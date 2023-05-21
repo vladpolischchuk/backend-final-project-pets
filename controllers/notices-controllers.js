@@ -78,7 +78,14 @@ const getOneNotice = async (req, res) => {
 
 const addNotices = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Notices.create({ ...req.body, owner });
+  const noticesData = req.body;
+
+  const data = !!req.file
+    ? { photo: req.file.path, owner, ...noticesData }
+    : { owner, ...noticesData };
+
+  const result = await Notices.create(data);
+
   res.status(201).json(result);
 };
 

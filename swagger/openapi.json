@@ -454,9 +454,87 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Notices"
+                "required": [
+                  "category",
+                  "title",
+                  "birthday",
+                  "name",
+                  "breed",
+                  "sex",
+                  "location",
+                  "price",
+                  "comments",
+                  "phone",
+                  "email",
+                  "photo"
+                ],
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "file",
+                    "format": "binary"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "category"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "title"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "description": "birthday"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "name"
+                  },
+                  "breed": {
+                    "type": "string",
+                    "description": "breed"
+                  },
+                  "sex": {
+                    "type": "string",
+                    "description": "sex"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "[sell , lost-found, for-free]"
+                  },
+                  "price": {
+                    "type": "number",
+                    "description": "price"
+                  },
+                  "comments": {
+                    "type": "string",
+                    "description": "comments"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "phone"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "email"
+                  }
+                },
+                "example": {
+                  "title": "Test title",
+                  "name": "Andrew",
+                  "birthday": "13.05.2020",
+                  "breed": "test",
+                  "location": "Kiev",
+                  "sex": "male",
+                  "category": "lost-found",
+                  "price": "1000",
+                  "comments": "Test",
+                  "email": "test@mail.ua",
+                  "phone": "1111111111",
+                  "image": "https://res.cloudinary.com/dosrxpfu8/image/upload/v1684244620/va96zncab7vq5srzfu2k.png"
+                }
               }
             }
           }
@@ -516,10 +594,10 @@
           "application/json": {
             "schema": {
               "skip": {
-                "type":"number"
+                "type": "number"
               },
               "limit": {
-                "type":"number"
+                "type": "number"
               }
             }
           }
@@ -533,89 +611,6 @@
           },
           "500": {
             "description": "Server error"
-          }
-        }
-      }
-    },
-    "/notices/delete/{id}": {
-      "delete": {
-        "summary": "Delete notice",
-        "tags": ["Pets"],
-        "operationId": "Delete notice",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "description": "The token issued to the current user.",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Authorizations - The token issued to the current user."
-            }
-          },
-          {
-            "name": "id",
-            "description": "Notice's id",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "646263154adda6edf64a8ffa"
-            }
-          }
-        ],
-        "security": [{ "Bearer": [] }],
-        "content": {
-          "application/json": {
-            "schema":[]
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The pet was successfully deleted"
-          },
-          "404": {
-            "description": "This pet is not in the list!"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
-    "/notices/id/{id}": {
-      "get": {
-        "summary": "Get one notice",
-        "tags": ["Pets"],
-        "operationId": "Get one notice",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Notice's id",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "646263154adda6edf64a8ffa"
-            }
-          }
-        ],
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref":"#/components/schemas/Notices"
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The pet was successfully deleted"
-          },
-          "404": {
-            "description": "This pet is not in the list!"
-          },
-          "401": {
-            "description": "Unauthorized"
           }
         }
       }
@@ -703,6 +698,89 @@
           },
           "500": {
             "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notices/delete/{id}": {
+      "delete": {
+        "summary": "Delete notice",
+        "tags": ["Notices"],
+        "operationId": "Delete notice",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": []
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/notices/id/{id}": {
+      "get": {
+        "summary": "Get one notice",
+        "tags": ["Notices"],
+        "operationId": "Get one notice",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -893,7 +971,8 @@
           "sex",
           "location",
           "phone",
-          "email"
+          "email",
+          "photo"
         ],
         "properties": {
           "category": {
@@ -940,6 +1019,10 @@
           "email": {
             "type": "string",
             "description": "email"
+          },
+          "photo": {
+            "type": "string",
+            "description": "photo"
           }
         },
         "example": {
@@ -953,7 +1036,8 @@
           "price": "1000",
           "comments": "Test",
           "phone": "+38000000000",
-          "email": "test@mail.ua"
+          "email": "test@mail.ua",
+          "photo": ""
         }
       },
       "Friends": {
