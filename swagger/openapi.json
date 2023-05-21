@@ -464,10 +464,6 @@
                   "breed",
                   "sex",
                   "location",
-                  "price",
-                  "comments",
-                  "phone",
-                  "email",
                   "photo"
                 ],
                 "type": "object",
@@ -505,7 +501,7 @@
                     "description": "[sell , lost-found, for-free]"
                   },
                   "price": {
-                    "type": "number",
+                    "type": "string",
                     "description": "price"
                   },
                   "comments": {
@@ -600,54 +596,6 @@
               "limit": {
                 "type": "number"
               }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/notices/delete/{id}": {
-      "delete": {
-        "summary": "Delete notice",
-        "tags": ["Notices"],
-        "operationId": "Delete notice",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "description": "The token issued to the current user.",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Authorizations - The token issued to the current user."
-            }
-          },
-          {
-            "name": "id",
-            "description": "Notice's id",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "646263154adda6edf64a8ffa"
-            }
-          }
-        ],
-        "security": [{ "Bearer": [] }],
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Notices"
             }
           }
         },
@@ -995,8 +943,6 @@
           "breed",
           "sex",
           "location",
-          "phone",
-          "email",
           "photo"
         ],
         "properties": {
@@ -1034,16 +980,8 @@
             "description": "comments"
           },
           "price": {
-            "type": "number",
+            "type": "string",
             "description": "price"
-          },
-          "phone": {
-            "type": "string",
-            "description": "phone"
-          },
-          "email": {
-            "type": "string",
-            "description": "email"
           },
           "photo": {
             "type": "string",
