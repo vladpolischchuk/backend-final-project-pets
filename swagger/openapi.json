@@ -593,6 +593,7 @@
         "content": {
           "application/json": {
             "schema": {
+              "$ref": "#/components/schemas/Notices",
               "skip": {
                 "type": "number"
               },
@@ -615,11 +616,34 @@
         }
       }
     },
-    "/notices/all": {
-      "get": {
-        "summary": "Get all notices",
+    "/notices/delete/{id}": {
+      "delete": {
+        "summary": "Delete notice",
         "tags": ["Notices"],
-        "operationId": "Get all notices",
+        "operationId": "Delete notice",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
         "content": {
           "application/json": {
             "schema": {
@@ -645,6 +669,7 @@
         "summary": "Get notices by category",
         "tags": ["Notices"],
         "operationId": "Get notices by category",
+
         "parameters": [
           {
             "name": "category",

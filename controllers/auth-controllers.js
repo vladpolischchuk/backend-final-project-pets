@@ -70,9 +70,9 @@ const login = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-    const { email, name, birthDate, avatarURL, city, birthday, phone, id } = req.user;
+    const { email, name, avatarURL, city, birthday, phone, id } = req.user;
     res.json({
-      email, name, birthDate, avatarURL, city, phone, birthday, id
+      email, name, avatarURL, city, phone, birthday, id
     });
 
 };
@@ -89,20 +89,29 @@ const logout = async (req, res) => {
 };
 
 const updateUser = async(req, res) => {
-    const {id} = req.user;
-    console.log(req.body)
-    const result = await Users.findByIdAndUpdate(id, req.body)
-    res.json(result);
+  const {id } = req.user;
+ 
+await Users.findByIdAndUpdate(id, req.body)
+let infoUser;
+  const getCurrentInfo = async (res, req) => {
+    infoUser = await Users.findById(id);
+}
+await getCurrentInfo()
+  res.json(infoUser);
 }
 
 const updateAvatar = async (req, res) => {
-  const {id} = req.user;
+const {id} = req.user;
 
- const newAvatar = await Users.findByIdAndUpdate(id, {avatarURL: req.file.path});
+await Users.findByIdAndUpdate(id, {avatarURL: req.file.path});
 
-  res.json(newAvatar);
+let newAvatar;
+const getCurrentInfo = async (res, req) => {
+  newAvatar = await Users.findById(id);
+}
+await getCurrentInfo()
 
-
+res.json(newAvatar);
 };
 module.exports = {
   getCurrent: ctrlWrapper(getCurrent),
