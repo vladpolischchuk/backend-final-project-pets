@@ -122,8 +122,8 @@ const getUserNotice = async (req, res) => {
   const {
     page = 1,
     limit = 12,
-    status = "Sell",
-    search = "Good",
+    category,
+    search,
     myNotice,
     favorite,
   } = req.query;
@@ -141,8 +141,8 @@ const getUserNotice = async (req, res) => {
     };
   }
 
-  if (status && NOTICE_STATUS.includes(status.toLowerCase())) {
-    filters.$match = { ...filters.$match, status: status.toLowerCase() };
+  if (category && NOTICE_STATUS.includes(category.toLowerCase())) {
+    filters.$match = { ...filters.$match, category: category.toLowerCase() };
   }
 
   if (search) {
