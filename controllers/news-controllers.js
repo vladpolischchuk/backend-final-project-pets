@@ -16,7 +16,6 @@ const getNews = async (req, res, next) => {
 
 const getNewsByTitle = async (req, res) => {
   const { page, limit, title } = req.query;
-
   const skip = (page - 1) * limit;
 
   /* if (!title) {
@@ -24,6 +23,9 @@ const getNewsByTitle = async (req, res) => {
   } */
 
   const optimizerTitle = new RegExp(title, "i");
+
+  const resultAll = await News.find(title ? { title: optimizerTitle } : {});
+
   const result = await News.find(
     { title: optimizerTitle },
     "-createdAt -updatedAt",
@@ -37,7 +39,7 @@ const getNewsByTitle = async (req, res) => {
     throw HttpError(404, "Title not found");
   }
 
-  res.json(result);
+  res.json({ result, total: resultAll.length });
 };
 
 module.exports = {
