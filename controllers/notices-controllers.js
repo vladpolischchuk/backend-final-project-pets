@@ -4,6 +4,8 @@ const { Notices } = require("../models/notice");
 
 const { HttpError } = require("../utils");
 
+const NOTICE_STATUS = ["lost/found", "in good hands", "sell"];
+
 const getAllNotices = async (req, res) => {
   const result = await Notices.find();
   res.json(result);
@@ -116,6 +118,87 @@ const deleteNotice = async (req, res) => {
   });
 };
 
+const getUserNotice = async (req, res) => {
+  const {
+    page = 1,
+    limit = 12,
+    status = "Sell",
+    search = "Good",
+    myNotice,
+    favorite,
+  } = req.query;
+  const skip = (page - 1) * limit;
+  const userId = req.user._id;
+
+  let filters = {
+    $match: {},
+  };
+
+  if (myNotice) {
+    filters.$match = {
+      ...filters.$match,
+      $expr: { $eq: ["$owner", { $toObjectId: userId.toString() }] },
+    };
+  }
+
+  if (status && NOTICE_STATUS.includes(status.toLowerCase())) {
+    filters.$match = { ...filters.$match, status: status.toLowerCase() };
+  }
+
+  if (search) {
+    filters.$match = { ...filters.$match, title: new RegExp(`${search}`) };
+  }
+
+  if (favorite) {
+    filters.$match = { ...filters.$match, favorite: true };
+  }
+  let pipelines = [
+    [
+      {
+        $lookup: {
+          from: "noticesFavorite",
+          localField: "_id",
+          foreignField: "notice",
+          as: "favoriteNotice",
+        },
+      },
+      {
+        $addFields: {
+          favorite: {
+            $cond: [
+              {
+                $setIsSubset: [[userId], "$favoriteNotice.user"],
+              },
+              true,
+              false,
+            ],
+          },
+        },
+      },
+      {
+        $unset: "favoriteNotice",
+      },
+      filters,
+      {
+        $skip: skip,
+      },
+      {
+        $limit: limit,
+      },
+    ],
+  ];
+
+  const result = await Notices.aggregate(pipelines);
+
+  res.json({
+    status: "success",
+    code: 200,
+    data: {
+      result,
+    },
+  });
+};
+
 module.exports = {
   getAllNotices: ctrlWrapper(getAllNotices),
   addNotices: ctrlWrapper(addNotices),
@@ -124,4 +207,5 @@ module.exports = {
   getOneNotice: ctrlWrapper(getOneNotice),
   getNoticesByOwner: ctrlWrapper(getNoticesByOwner),
   deleteNotice: ctrlWrapper(deleteNotice),
+  getUserNotice: ctrlWrapper(getUserNotice),
 };
