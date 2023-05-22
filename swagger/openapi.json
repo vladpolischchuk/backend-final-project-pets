@@ -333,10 +333,10 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": ["image", "name", "breed", "birthDate", "comments"],
+                "required": ["photo", "name", "breed", "birthDate", "comments"],
                 "type": "object",
                 "properties": {
-                  "image": {
+                  "photo": {
                     "type": "file",
                     "format": "binary"
                   },
@@ -383,12 +383,12 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Pet"
+              "$ref": "#/components/schemas/Allpets"
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Information found"
           },
           "404": {
@@ -472,6 +472,42 @@
       }
     },
     "/notices/": {
+      "get": {
+        "summary": "Get user notice",
+        "tags": ["Notices"],
+        "operationId": "Get user notice",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
       "post": {
         "summary": "Add notices",
         "tags": ["Notices"],
@@ -499,7 +535,8 @@
                   },
                   "category": {
                     "type": "string",
-                    "description": "category"
+                    "enum": ["sell", "lost-found", "for-free"],
+                    "description": "Category notices"
                   },
                   "title": {
                     "type": "string",
@@ -523,7 +560,7 @@
                   },
                   "location": {
                     "type": "string",
-                    "description": "[sell , lost-found, for-free]"
+                    "description": "location"
                   },
                   "price": {
                     "type": "string",
@@ -783,6 +820,98 @@
         }
       }
     },
+    "/notices/{noticeId}/favorite": {
+      "post": {
+        "summary": "Add notices favorite",
+        "tags": ["Notices"],
+        "operationId": "Add notices favorite",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete notices favorite",
+        "tags": ["Notices"],
+        "operationId": "Delete notices favorite",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": []
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/friends/": {
       "get": {
         "summary": "Get all friends",
@@ -1011,6 +1140,18 @@
           "photo": {
             "type": "string",
             "description": "photo"
+          },
+          "phone": {
+            "type": "string",
+            "description": "phone"
+          },
+          "email": {
+            "type": "string",
+            "description": "email"
+          },
+          "favorite": {
+            "type": "boolean",
+            "description": "favorite"
           }
         },
         "example": {
@@ -1025,7 +1166,8 @@
           "comments": "Test",
           "phone": "+38000000000",
           "email": "test@mail.ua",
-          "photo": ""
+          "photo": "",
+          "favorite": true
         }
       },
       "Friends": {
