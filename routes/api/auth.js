@@ -16,7 +16,7 @@ router.post("/login", validateBody(registerShema), login);
 
 router.get("/current", authenticate, getCurrent);
 
-router.post("/logout", authenticate, validateBody(registerShema), logout);
+router.post("/logout", authenticate, logout);
 
 router.put("/user/:id", authenticate, validateBody(userInfoShema), updateUser)
 
