@@ -82,7 +82,7 @@ const addNotices = async (req, res) => {
   const { _id: owner } = req.user;
   const noticesData = req.body;
 
-  const data = !!req.file
+  const data = !req.file
     ? { photo: req.file.path, owner, ...noticesData }
     : { owner, ...noticesData };
 
@@ -92,15 +92,20 @@ const addNotices = async (req, res) => {
 };
 
 const getNoticesByOwner = async (req, res) => {
-  const { _id: owner } = req.user;
+  const { email: owner } = req.user;
   const { page, limit } = req.query;
 
   const skip = (page - 1) * limit;
+  console.log(owner);
 
-  const result = await Notices.find({ owner }, "-createdAt -updatedAt", {
-    skip,
-    limit,
-  });
+  const result = await Notices.find(
+    { breed: "scottish" },
+    "-createdAt -updatedAt",
+    {
+      skip,
+      limit,
+    }
+  );
 
   res.json(result);
 };
@@ -137,7 +142,7 @@ const getUserNotice = async (req, res) => {
   const skip = (page - 1) * limit;
   const userId = req.user._id;
 
-  let filters = {
+  const filters = {
     $match: {},
   };
 
@@ -159,7 +164,7 @@ const getUserNotice = async (req, res) => {
   if (favorite) {
     filters.$match = { ...filters.$match, favorite: true };
   }
-  let pipelines = [
+  const pipelines = [
     [
       {
         $lookup: {
