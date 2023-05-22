@@ -98,6 +98,8 @@ const getNoticesByOwner = async (req, res) => {
   const skip = (page - 1) * limit;
   console.log(owner);
 
+  const resultAll = await Notices.find({ breed: "scottish" });
+
   const result = await Notices.find(
     { breed: "scottish" },
     "-createdAt -updatedAt",
@@ -107,7 +109,7 @@ const getNoticesByOwner = async (req, res) => {
     }
   );
 
-  res.json(result);
+  res.json({ result, total: resultAll.length });
 };
 
 const deleteNotice = async (req, res) => {
