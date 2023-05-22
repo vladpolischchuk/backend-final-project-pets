@@ -16,7 +16,6 @@ const router = express.Router();
 
 router.get("/user", authenticate, ctrl.getNoticesByOwner);
 
-
 router.post(
   "/",
   authenticate,
@@ -37,7 +36,6 @@ router.delete(
 );
 
 router.post("/", authenticate, cloudinary.single("photo"), ctrl.addNotices);
-
 
 router.delete("/delete/:id", authenticate, ctrl.deleteNotice);
 
