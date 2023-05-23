@@ -417,9 +417,9 @@
             }
           },
           {
-            "name": "id",
+            "name": "petId",
             "description": "Pet's id",
-            "in": "header",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
@@ -684,7 +684,7 @@
           {
             "name": "category",
             "description": "category",
-            "in": "header",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
@@ -756,7 +756,7 @@
           {
             "name": "id",
             "description": "Notice's id",
-            "in": "header",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
@@ -767,7 +767,9 @@
         "security": [{ "Bearer": [] }],
         "content": {
           "application/json": {
-            "schema": []
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
           }
         },
         "responses": {
@@ -792,7 +794,7 @@
           {
             "name": "id",
             "description": "Notice's id",
-            "in": "header",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
@@ -837,9 +839,9 @@
             }
           },
           {
-            "name": "id",
+            "name": "noticeId",
             "description": "Notice's id",
-            "in": "header",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
@@ -883,9 +885,9 @@
             }
           },
           {
-            "name": "id",
+            "name": "noticeId",
             "description": "Notice's id",
-            "in": "header",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
