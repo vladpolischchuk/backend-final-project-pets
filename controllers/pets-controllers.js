@@ -12,7 +12,7 @@ const addPet = async (req, res, next) => {
             ? { photo: req.file.path, owner, ...petData }
             : { owner, ...petData };
       
-      const newPet = Pet.create(data)
+      const newPet = await Pet.create(data);
 
       res.status(201).json(newPet);
 };
