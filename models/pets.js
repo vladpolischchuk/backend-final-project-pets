@@ -12,9 +12,10 @@ const petSchema = new Schema(
       type: String,
       required: [true, "fill in the breed of a pet"],
     },
-    birthDate: {
-      type: String,
-      required: [true, "fill in the birth date of a pet"],
+
+    birthday: {
+        type: String,
+        required: [true, "fill in the birthday of a pet"],
     },
     photo: {
       type: String,
