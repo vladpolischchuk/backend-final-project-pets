@@ -4,9 +4,9 @@ const ctrl = require("../../controllers/notices-controllers");
 
 const noticeFavoriteCtrl = require("../../controllers/noticesFavorite-controllers");
 
-const { validateBody } = require("../../utils");
+// const { validateBody } = require("../../utils");
 
-const { schemas } = require("../../models/notice");
+// const { schemas } = require("../../models/notice");
 
 const { authenticate, cloudinary } = require("../../middlewares/index");
 

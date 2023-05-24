@@ -59,11 +59,9 @@ const noticesSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
   },
   phone: {
     type: String,
-    required: true,
   },
 });
 
@@ -93,8 +91,8 @@ const addNoticeSchema = Joi.object(
       }),
     comments: Joi.string(),
     phone: Joi.string().required(),
-    email: Joi.string().required(),
-    photo: Joi.string().required(),
+    email: Joi.string(),
+    photo: Joi.string(),
   },
   { versionKey: false, timestamps: true }
 );
