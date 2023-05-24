@@ -82,7 +82,7 @@ const addNotices = async (req, res) => {
   const { _id: owner } = req.user;
   const noticesData = req.body;
 
-  const data = !req.file
+  const data = req.file
     ? { photo: req.file.path, owner, ...noticesData }
     : { owner, ...noticesData };
 

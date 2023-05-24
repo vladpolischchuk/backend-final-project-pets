@@ -16,18 +16,18 @@ const router = express.Router();
 
 router.get("/user", authenticate, ctrl.getNoticesByOwner);
 
-router.post(
-  "/",
-  authenticate,
-  validateBody(schemas.addNoticeSchema),
-  ctrl.addNotices
-);
+// router.post(
+//   "/",
+//   authenticate,
+//   validateBody(schemas.addNoticeSchema),
+//   ctrl.addNotices
+// );
 router.post(
   "/:noticeId/favorite",
   authenticate,
   noticeFavoriteCtrl.addNoticesFavorite
 );
-router.get("/", authenticate, ctrl.getUserNotice);
+// router.get("/", authenticate, ctrl.getUserNotice);
 
 router.delete(
   "/:noticeId/favorite",
