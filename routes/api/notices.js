@@ -27,7 +27,7 @@ router.post(
   authenticate,
   noticeFavoriteCtrl.addNoticesFavorite
 );
-// router.get("/", authenticate, ctrl.getUserNotice);
+router.get("/fvrt", authenticate, ctrl.getUserNotice);
 
 router.delete(
   "/:noticeId/favorite",
