@@ -153,7 +153,7 @@ const getUserNotice = async (req, res) => {
   let pipelines = [
     {
       $lookup: {
-        from: "noticesFavorite",
+        from: "noticesfavorites",
         localField: "_id",
         foreignField: "notice",
         as: "favoriteNotice",
@@ -196,6 +196,7 @@ const getUserNotice = async (req, res) => {
   const count = await Notices.aggregate([
     [...pipelines, ...paginationCountStep],
   ]);
+  console.log(result.filter((res) => res.length));
 
   res.json({
     status: "success",
