@@ -153,52 +153,61 @@ const getUserNotice = async (req, res) => {
     filters.$match = { ...filters.$match, favorite: true };
   }
   let pipelines = [
-    [
-      {
-        $lookup: {
-          from: "noticesFavorite",
-          localField: "_id",
-          foreignField: "notice",
-          as: "favoriteNotice",
+    {
+      $lookup: {
+        from: "noticesFavorite",
+        localField: "_id",
+        foreignField: "notice",
+        as: "favoriteNotice",
+      },
+    },
+    {
+      $addFields: {
+        favorite: {
+          $cond: [
+            {
+              $setIsSubset: [[userId], "$favoriteNotice.user"],
+            },
+            true,
+            false,
+          ],
         },
       },
-      {
-        $addFields: {
-          favorite: {
-            $cond: [
-              {
-                $setIsSubset: [[userId], "$favoriteNotice.user"],
-              },
-              true,
-              false,
-            ],
-          },
-        },
-      },
-      {
-        $unset: "favoriteNotice",
-      },
-      filters,
-      {
-        $skip: skip,
-      },
-      {
-        $limit: limit,
-      },
-    ],
+    },
+    {
+      $unset: "favoriteNotice",
+    },
+    filters,
   ];
 
-  const result = await Notices.aggregate(pipelines);
+  const paginationAgreggationSteps = [
+    {
+      $skip: skip,
+    },
+    {
+      $limit: limit,
+    },
+  ];
+
+  const paginationCountStep = [{ $group: { _id: null, myCount: { $sum: 1 } } }];
+
+  const result = await Notices.aggregate([
+    [...pipelines, ...paginationAgreggationSteps],
+  ]);
+
+  const count = await Notices.aggregate([
+    [...pipelines, ...paginationCountStep],
+  ]);
 
   res.json({
     status: "success",
     code: 200,
     data: {
       result,
+      count: count[0]?.myCount || 0,
     },
   });
 };
-
 module.exports = {
   getAllNotices: ctrlWrapper(getAllNotices),
   addNotices: ctrlWrapper(addNotices),
