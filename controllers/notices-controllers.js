@@ -76,8 +76,6 @@ const getOneNotice = async (req, res) => {
   res.json(result);
 };
 
-// Пользователь авторизован
-
 const addNotices = async (req, res) => {
   const { _id: owner } = req.user;
   const noticesData = req.body;
@@ -132,8 +130,8 @@ const getUserNotice = async (req, res) => {
   const {
     page = 1,
     limit = 12,
-    status = "Sell",
-    search = "Good",
+    category,
+    search,
     myNotice,
     favorite,
   } = req.query;
@@ -151,8 +149,8 @@ const getUserNotice = async (req, res) => {
     };
   }
 
-  if (status && NOTICE_STATUS.includes(status.toLowerCase())) {
-    filters.$match = { ...filters.$match, status: status.toLowerCase() };
+  if (category && NOTICE_STATUS.includes(category.toLowerCase())) {
+    filters.$match = { ...filters.$match, category: category.toLowerCase() };
   }
 
   if (search) {
@@ -162,53 +160,63 @@ const getUserNotice = async (req, res) => {
   if (favorite) {
     filters.$match = { ...filters.$match, favorite: true };
   }
-  const pipelines = [
-    [
-      {
-        $lookup: {
-          from: "noticesFavorite",
-          localField: "_id",
-          foreignField: "notice",
-          as: "favoriteNotice",
+  
+  let pipelines = [
+    {
+      $lookup: {
+        from: "noticesFavorite",
+        localField: "_id",
+        foreignField: "notice",
+        as: "favoriteNotice",
+      },
+    },
+    {
+      $addFields: {
+        favorite: {
+          $cond: [
+            {
+              $setIsSubset: [[userId], "$favoriteNotice.user"],
+            },
+            true,
+            false,
+          ],
         },
       },
-      {
-        $addFields: {
-          favorite: {
-            $cond: [
-              {
-                $setIsSubset: [[userId], "$favoriteNotice.user"],
-              },
-              true,
-              false,
-            ],
-          },
-        },
-      },
-      {
-        $unset: "favoriteNotice",
-      },
-      filters,
-      {
-        $skip: skip,
-      },
-      {
-        $limit: limit,
-      },
-    ],
+    },
+    {
+      $unset: "favoriteNotice",
+    },
+    filters,
   ];
 
-  const result = await Notices.aggregate(pipelines);
+  const paginationAgreggationSteps = [
+    {
+      $skip: skip,
+    },
+    {
+      $limit: limit,
+    },
+  ];
+
+  const paginationCountStep = [{ $group: { _id: null, myCount: { $sum: 1 } } }];
+
+  const result = await Notices.aggregate([
+    [...pipelines, ...paginationAgreggationSteps],
+  ]);
+
+  const count = await Notices.aggregate([
+    [...pipelines, ...paginationCountStep],
+  ]);
 
   res.json({
     status: "success",
     code: 200,
     data: {
       result,
+      count: count[0]?.myCount || 0,
     },
   });
 };
-
 module.exports = {
   getAllNotices: ctrlWrapper(getAllNotices),
   addNotices: ctrlWrapper(addNotices),
