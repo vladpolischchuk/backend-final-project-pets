@@ -116,6 +116,7 @@ const deleteNotice = async (req, res) => {
   });
 };
 
+// Фильтр
 const getUserNotice = async (req, res) => {
   const {
     page = 1,
