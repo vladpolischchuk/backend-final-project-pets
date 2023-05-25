@@ -4,9 +4,9 @@ const ctrl = require("../../controllers/notices-controllers");
 
 const noticeFavoriteCtrl = require("../../controllers/noticesFavorite-controllers");
 
-const { validateBody } = require("../../utils");
+// const { validateBody } = require("../../utils");
 
-const { schemas } = require("../../models/notice");
+// const { schemas } = require("../../models/notice");
 
 const { authenticate, cloudinary } = require("../../middlewares/index");
 
@@ -16,12 +16,12 @@ const router = express.Router();
 
 router.get("/user", authenticate, ctrl.getNoticesByOwner);
 
-router.post(
-  "/",
-  authenticate,
-  validateBody(schemas.addNoticeSchema),
-  ctrl.addNotices
-);
+// router.post(
+//   "/",
+//   authenticate,
+//   validateBody(schemas.addNoticeSchema),
+//   ctrl.addNotices
+// );
 router.post(
   "/:noticeId/favorite",
   authenticate,
@@ -34,6 +34,8 @@ router.delete(
   authenticate,
   noticeFavoriteCtrl.deleteNoticesFavorite
 );
+
+router.post("/", authenticate, cloudinary.single("photo"), ctrl.addNotices);
 
 router.delete("/delete/:id", authenticate, ctrl.deleteNotice);
 

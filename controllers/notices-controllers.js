@@ -78,7 +78,14 @@ const getOneNotice = async (req, res) => {
 
 const addNotices = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Notices.create({ ...req.body, owner });
+  const noticesData = req.body;
+
+  const data = req.file
+    ? { photo: req.file.path, owner, ...noticesData }
+    : { owner, ...noticesData };
+
+  const result = await Notices.create(data);
+
   res.status(201).json(result);
 };
 
@@ -87,13 +94,16 @@ const getNoticesByOwner = async (req, res) => {
   const { page, limit } = req.query;
 
   const skip = (page - 1) * limit;
+  console.log(owner);
+
+  const resultAll = await Notices.find({ owner });
 
   const result = await Notices.find({ owner }, "-createdAt -updatedAt", {
     skip,
     limit,
   });
 
-  res.json(result);
+  res.json({ result, total: resultAll.length });
 };
 
 const deleteNotice = async (req, res) => {
@@ -128,7 +138,7 @@ const getUserNotice = async (req, res) => {
   const skip = (page - 1) * limit;
   const userId = req.user._id;
 
-  let filters = {
+  const filters = {
     $match: {},
   };
 
@@ -150,6 +160,7 @@ const getUserNotice = async (req, res) => {
   if (favorite) {
     filters.$match = { ...filters.$match, favorite: true };
   }
+  
   let pipelines = [
     {
       $lookup: {

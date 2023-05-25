@@ -311,7 +311,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Information found"
           },
           "404": {
@@ -333,10 +333,10 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": ["image", "name", "breed", "birthDate", "comments"],
+                "required": ["photo", "name", "breed", "birthDate", "comments"],
                 "type": "object",
                 "properties": {
-                  "image": {
+                  "photo": {
                     "type": "file",
                     "format": "binary"
                   },
@@ -383,12 +383,12 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Pet"
+              "$ref": "#/components/schemas/Allpets"
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Information found"
           },
           "404": {
@@ -417,9 +417,9 @@
             }
           },
           {
-            "name": "id",
+            "name": "petId",
             "description": "Pet's id",
-            "in": "header",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
@@ -446,11 +446,49 @@
         }
       }
     },
-    "/notices/": {
+    "/notices/all": {
       "get": {
         "summary": "Get all notices",
         "tags": ["Notices"],
         "operationId": "Get all notices",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notices/": {
+      "get": {
+        "summary": "Get user notice",
+        "tags": ["Notices"],
+        "operationId": "Get user notice",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
         "content": {
           "application/json": {
             "schema": {
@@ -477,17 +515,149 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Notices"
+                "required": [
+                  "category",
+                  "title",
+                  "birthday",
+                  "name",
+                  "breed",
+                  "sex",
+                  "location",
+                  "photo"
+                ],
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "file",
+                    "format": "binary"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": ["sell", "lost-found", "for-free"],
+                    "description": "Category notices"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "title"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "description": "birthday"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "name"
+                  },
+                  "breed": {
+                    "type": "string",
+                    "description": "breed"
+                  },
+                  "sex": {
+                    "type": "string",
+                    "description": "sex"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "location"
+                  },
+                  "price": {
+                    "type": "string",
+                    "description": "price"
+                  },
+                  "comments": {
+                    "type": "string",
+                    "description": "comments"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "phone"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "email"
+                  }
+                },
+                "example": {
+                  "title": "Test title",
+                  "name": "Andrew",
+                  "birthday": "13.05.2020",
+                  "breed": "test",
+                  "location": "Kiev",
+                  "sex": "male",
+                  "category": "lost-found",
+                  "price": "1000",
+                  "comments": "Test",
+                  "email": "test@mail.ua",
+                  "phone": "1111111111",
+                  "image": "https://res.cloudinary.com/dosrxpfu8/image/upload/v1684244620/va96zncab7vq5srzfu2k.png"
+                }
               }
             }
           }
         },
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notices/user": {
+      "get": {
+        "summary": "Get notices by owner",
+        "tags": ["Notices"],
+        "operationId": "Get notices by owner",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices",
+              "skip": {
+                "type": "number"
+              },
+              "limit": {
+                "type": "number"
+              }
             }
           }
         },
@@ -504,16 +674,17 @@
         }
       }
     },
-    "/notices/categories": {
+    "/notices/{category}": {
       "get": {
         "summary": "Get notices by category",
         "tags": ["Notices"],
         "operationId": "Get notices by category",
+
         "parameters": [
           {
-            "name": "categories",
-            "description": "categories",
-            "in": "header",
+            "name": "category",
+            "description": "category",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
@@ -541,32 +712,11 @@
         }
       }
     },
-    "/notices/{search}": {
+    "/notices/search": {
       "get": {
         "summary": "Get notices by title",
         "tags": ["Notices"],
         "operationId": "Get notices by title",
-        "parameters": [
-          {
-            "name": "title",
-            "description": "title",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Search"
-            }
-          },
-          {
-            "name": "category",
-            "description": "category",
-            "in": "header",
-            "schema": {
-              "type": "string",
-              "example": "lost-found"
-            }
-          }
-        ],
         "content": {
           "application/json": {
             "schema": {
@@ -587,20 +737,68 @@
         }
       }
     },
-    "/notices/{id}": {
-      "get": {
-        "summary": "Get one notices by id",
+    "/notices/delete/{id}": {
+      "delete": {
+        "summary": "Delete notice",
         "tags": ["Notices"],
-        "operationId": "Get one notices by id",
+        "operationId": "Delete notice",
         "parameters": [
           {
-            "name": "id",
-            "description": "id",
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
             "in": "header",
             "required": true,
             "schema": {
               "type": "string",
-              "example": "64625b7bbd1b77c304194363"
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/notices/id/{id}": {
+      "get": {
+        "summary": "Get one notice",
+        "tags": ["Notices"],
+        "operationId": "Get one notice",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Notice's id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
             }
           }
         ],
@@ -613,13 +811,105 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully"
+            "description": "The pet was successfully deleted"
           },
           "404": {
-            "description": "Not found"
+            "description": "This pet is not in the list!"
           },
-          "500": {
-            "description": "Server error"
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/notices/{noticeId}/favorite": {
+      "post": {
+        "summary": "Add notices favorite",
+        "tags": ["Notices"],
+        "operationId": "Add notices favorite",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "noticeId",
+            "description": "Notice's id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Notices"
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete notices favorite",
+        "tags": ["Notices"],
+        "operationId": "Delete notices favorite",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "The token issued to the current user.",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Authorizations - The token issued to the current user."
+            }
+          },
+          {
+            "name": "noticeId",
+            "description": "Notice's id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "646263154adda6edf64a8ffa"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "content": {
+          "application/json": {
+            "schema": []
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The pet was successfully deleted"
+          },
+          "404": {
+            "description": "This pet is not in the list!"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -661,43 +951,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Successfully"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/news/{search}": {
-      "get": {
-        "summary": "Get all news",
-        "tags": ["News"],
-        "operationId": "Get all news",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/News"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "title",
-            "description": "title",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Search"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successfully"
@@ -846,8 +1099,7 @@
           "breed",
           "sex",
           "location",
-          "phone",
-          "email"
+          "photo"
         ],
         "properties": {
           "category": {
@@ -884,8 +1136,12 @@
             "description": "comments"
           },
           "price": {
-            "type": "number",
+            "type": "string",
             "description": "price"
+          },
+          "photo": {
+            "type": "string",
+            "description": "photo"
           },
           "phone": {
             "type": "string",
@@ -894,6 +1150,10 @@
           "email": {
             "type": "string",
             "description": "email"
+          },
+          "favorite": {
+            "type": "boolean",
+            "description": "favorite"
           }
         },
         "example": {
@@ -907,7 +1167,9 @@
           "price": "1000",
           "comments": "Test",
           "phone": "+38000000000",
-          "email": "test@mail.ua"
+          "email": "test@mail.ua",
+          "photo": "",
+          "favorite": true
         }
       },
       "Friends": {
@@ -981,6 +1243,14 @@
           "date": {
             "type": "string",
             "description": "date"
+          },
+          "skip": {
+            "type": "number",
+            "description": "skip"
+          },
+          "limit": {
+            "type": "number",
+            "description": "limit"
           }
         },
         "example": {
@@ -988,7 +1258,9 @@
           "text": "text",
           "url": "url",
           "imgUrl": "url",
-          "date": "20-03-2023"
+          "date": "20-03-2023",
+          "skip": 1,
+          "limit": 10
         }
       }
     }
