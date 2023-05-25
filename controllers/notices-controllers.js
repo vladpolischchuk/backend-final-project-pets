@@ -76,8 +76,6 @@ const getOneNotice = async (req, res) => {
   res.json(result);
 };
 
-// Пользователь авторизован
-
 const addNotices = async (req, res) => {
   const { _id: owner } = req.user;
   const result = await Notices.create({ ...req.body, owner });
