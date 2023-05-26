@@ -7,7 +7,7 @@ const { HttpError } = require('../utils')
 const NOTICE_STATUS = ['lost/found', 'in good hands', 'sell']
 
 const getAllNotices = async (req, res) => {
-	const result = await Notices.find()
+	const result = await Notices.find().sort({ '-createdAt': 1 })
 	res.json(result)
 }
 
@@ -24,7 +24,7 @@ const getNoticesByTitle = async (req, res) => {
 	const result = await Notices.find({ title: optimizerTitle }, '-createdAt -updatedAt', {
 		skip,
 		limit,
-	})
+	}).sort({ '-createdAt': 1 })
 
 	if (result.length === 0) {
 		throw HttpError(404, 'Title not found')
@@ -38,18 +38,22 @@ const getNoticesByCategory = async (req, res) => {
 	const { page, limit, title } = req.query
 
 	const skip = (page - 1) * limit
-
-	const resultAll = await Notices.find(title ? { category, title } : { category })
+	const optimizerTitle = new RegExp(title, 'i')
+	const resultAll = await Notices.find(
+		title ? { category, title: optimizerTitle } : { category }
+	).sort({
+		'-createdAt': 1,
+	})
 
 	const result = await Notices.find(
-		title ? { category, title } : { category },
+		title ? { category, title: optimizerTitle } : { category },
 
 		'-createdAt -updatedAt',
 		{
 			skip,
 			limit,
 		}
-	)
+	).sort({ '-createdAt': 1 })
 
 	if (!result) {
 		throw HttpError(404, `Notice with ${category} or ${title} not found`)
